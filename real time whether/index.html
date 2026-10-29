@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Live Weather Telemetry Application - Real-time weather data and 5-day forecast powered by OpenWeatherMap API. Built with HTML5, CSS3, and Vanilla JavaScript.">
+  <title>Weather Dashboard | Live Telemetry & Forecast</title>
+
+  <!-- Google Fonts: Inter for clean, modern, and accessible typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Application Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-default">
+  <div class="app-wrapper">
+
+    <!-- Top Application Header -->
+    <header class="app-header">
+      <div class="header-brand">
+        <div class="brand-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path>
+          </svg>
+        </div>
+        <div>
+          <h1 class="brand-title">Weather Dashboard</h1>
+          <p class="brand-subtitle">Live Weather Telemetry & 5-Day Forecast</p>
+        </div>
+      </div>
+      <div class="api-status-badge" id="api-status-indicator" title="OpenWeatherMap API Connection Status">
+        <span class="status-dot"></span>
+        <span class="status-label" id="api-status-text">Ready</span>
+      </div>
+    </header>
+
+    <!-- Search Section -->
+    <section class="search-section" aria-label="City Search">
+      <form id="search-form" class="search-form" novalidate>
+        <div class="search-input-wrapper">
+          <svg class="search-icon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </svg>
+          <input 
+            type="text" 
+            id="search-input" 
+            class="search-input" 
+            placeholder="Search city (e.g. Nagpur, London, Tokyo, Sydney)..." 
+            autocomplete="off" 
+            spellcheck="false"
+            required
+            aria-label="Enter city name"
+          >
+          <button type="button" id="clear-search-btn" class="clear-btn" aria-label="Clear search input" hidden>
+            &times;
+          </button>
+        </div>
+        <button type="submit" id="search-btn" class="search-btn">
+          <span class="btn-text">Search</span>
+          <svg class="btn-icon" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </form>
+
+      <!-- Quick City Suggestions for Instant Testing -->
+      <div class="quick-cities" aria-label="Popular cities">
+        <span class="quick-label">Suggestions:</span>
+        <button type="button" class="chip-btn" data-city="Nagpur">Nagpur (Initial)</button>
+        <button type="button" class="chip-btn" data-city="London">London</button>
+        <button type="button" class="chip-btn" data-city="Tokyo">Tokyo</button>
+        <button type="button" class="chip-btn" data-city="New York">New York</button>
+        <button type="button" class="chip-btn" data-city="Sydney">Sydney</button>
+      </div>
+    </section>
+
+    <!-- API Key Notice Banner (Visible only if API Key is not configured) -->
+    <div id="api-key-banner" class="alert-banner alert-warning" role="alert" hidden>
+      <div class="alert-icon" aria-hidden="true">🔑</div>
+      <div class="alert-content">
+        <h2 class="alert-heading">API Key Configuration Needed</h2>
+        <p class="alert-desc">
+          To display live weather data, add your OpenWeatherMap key to <code>config.js</code> 
+          (<code>const WEATHER_API_KEY = "your_key";</code>) or paste it below for this browser session:
+        </p>
+        <div class="session-key-form">
+          <input 
+            type="text" 
+            id="session-api-key-input" 
+            class="session-key-input" 
+            placeholder="Paste OpenWeatherMap API Key here..."
+            autocomplete="off"
+          >
+          <button type="button" id="save-session-key-btn" class="btn-sm">Apply Key</button>
+        </div>
+        <p class="alert-helper-text">
+          Free keys can be generated at <a href="https://openweathermap.org/api" target="_blank" rel="noopener noreferrer">openweathermap.org/api</a>.
+        </p>
+      </div>
+    </div>
+
+    <!-- Error Banner (Preserves existing weather data if a subsequent search fails) -->
+    <div id="error-banner" class="alert-banner alert-error" role="alert" aria-live="assertive" hidden>
+      <div class="alert-icon" aria-hidden="true">⚠️</div>
+      <div class="alert-content">
+        <h2 class="alert-heading">Notice</h2>
+        <p id="error-message" class="alert-desc"></p>
+        <div id="activation-helper" class="activation-helper" hidden>
+          <div class="helper-steps" style="margin-top: 8px; font-size: 0.82rem; line-height: 1.4; opacity: 0.95;">
+            <strong>Why is this happening?</strong>
+            <ul style="padding-left: 1.2rem; margin-top: 4px;">
+              <li>OpenWeatherMap requires <strong>confirming your email address</strong> before activating keys.</li>
+              <li>New keys take <strong>10 to 30 minutes</strong> to propagate across OpenWeatherMap servers.</li>
+            </ul>
+          </div>
+          <button type="button" id="preview-sample-btn" class="chip-btn" style="margin-top: 10px; background: rgba(255,255,255,0.2); font-weight: 600;">
+            ⚡ Click here to Preview Dashboard with Sample Nagpur Data
+          </button>
+        </div>
+      </div>
+      <button type="button" id="dismiss-error-btn" class="alert-close-btn" aria-label="Dismiss error message">
+        &times;
+      </button>
+    </div>
+
+    <!-- Loading Spinner Indicator -->
+    <div id="loading-spinner" class="loading-container" aria-live="polite" hidden>
+      <div class="spinner"></div>
+      <p class="loading-text">Fetching weather telemetry...</p>
+    </div>
+
+    <!-- Main Dashboard Container -->
+    <main id="weather-dashboard" class="dashboard-content" hidden>
+      
+      <!-- Current Weather Hero Card -->
+      <section class="current-weather-card" id="current-weather-section" aria-label="Current Weather">
+        <div class="card-header">
+          <div class="location-info">
+            <div class="city-badge">
+              <h2 id="city-name" class="city-name">--</h2>
+              <span id="country-code" class="country-pill">--</span>
+            </div>
+            <p id="current-date" class="timestamp-text">--</p>
+          </div>
+          <div class="condition-badge" id="condition-badge">
+            <span id="weather-main">--</span>
+          </div>
+        </div>
+
+        <div class="hero-body">
+          <div class="temp-hero">
+            <div class="temp-display">
+              <span id="current-temp" class="temp-number">--</span>
+              <span class="temp-unit">°C</span>
+            </div>
+            <p id="weather-desc" class="weather-description">--</p>
+            <div class="temp-minmax-row">
+              <span class="minmax-item">
+                <span class="label">Min:</span> <strong id="temp-min">--°C</strong>
+              </span>
+              <span class="divider">•</span>
+              <span class="minmax-item">
+                <span class="label">Max:</span> <strong id="temp-max">--°C</strong>
+              </span>
+            </div>
+          </div>
+          <div class="icon-hero">
+            <img id="weather-icon" src="" alt="Weather Condition Icon" class="large-weather-icon" width="120" height="120">
+          </div>
+        </div>
+
+        <!-- Telemetry Metrics Grid -->
+        <div class="metrics-grid" aria-label="Weather Telemetry Details">
+          
+          <!-- Feels Like -->
+          <div class="metric-card">
+            <div class="metric-icon" aria-hidden="true">🌡️</div>
+            <div class="metric-details">
+              <span class="metric-label">Feels Like</span>
+              <span id="feels-like" class="metric-value">--°C</span>
+            </div>
+          </div>
+
+          <!-- Humidity -->
+          <div class="metric-card">
+            <div class="metric-icon" aria-hidden="true">💧</div>
+            <div class="metric-details">
+              <span class="metric-label">Humidity</span>
+              <span id="humidity" class="metric-value">--%</span>
+            </div>
+          </div>
+
+          <!-- Wind Speed -->
+          <div class="metric-card">
+            <div class="metric-icon" aria-hidden="true">💨</div>
+            <div class="metric-details">
+              <span class="metric-label">Wind Speed</span>
+              <span id="wind-speed" class="metric-value">-- m/s</span>
+            </div>
+          </div>
+
+          <!-- Pressure -->
+          <div class="metric-card">
+            <div class="metric-icon" aria-hidden="true">⏲️</div>
+            <div class="metric-details">
+              <span class="metric-label">Pressure</span>
+              <span id="pressure" class="metric-value">-- hPa</span>
+            </div>
+          </div>
+
+          <!-- Cloudiness -->
+          <div class="metric-card">
+            <div class="metric-icon" aria-hidden="true">☁️</div>
+            <div class="metric-details">
+              <span class="metric-label">Cloud Coverage</span>
+              <span id="clouds" class="metric-value">--%</span>
+            </div>
+          </div>
+
+          <!-- Sunrise & Sunset -->
+          <div class="metric-card metric-card-wide">
+            <div class="metric-icon" aria-hidden="true">🌅</div>
+            <div class="metric-details">
+              <span class="metric-label">Sunrise & Sunset</span>
+              <div class="sun-times">
+                <span>Sunrise: <strong id="sunrise-time">--:--</strong></span>
+                <span class="divider">|</span>
+                <span>Sunset: <strong id="sunset-time">--:--</strong></span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Five-Day Forecast Section -->
+      <section class="forecast-section" id="forecast-section" aria-label="Five Day Weather Forecast">
+        <div class="section-title-row">
+          <h2 class="section-title">5-Day Forecast</h2>
+          <span class="section-subtitle">Midday representative conditions & daily extremes</span>
+        </div>
+
+        <div id="forecast-cards-container" class="forecast-grid" role="list">
+          <!-- Daily Forecast Cards populated dynamically by script.js -->
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Initial Welcome / Placeholder state before any search is done -->
+    <div id="empty-state" class="empty-state" hidden>
+      <div class="empty-state-icon" aria-hidden="true">🌍</div>
+      <h2 class="empty-state-title">Ready for Weather Exploration</h2>
+      <p class="empty-state-text">Search for any city above to view live real-time weather telemetry and a 5-day forecast.</p>
+    </div>
+
+    <!-- Application Footer -->
+    <footer class="app-footer">
+      <p class="footer-text">
+        Live Weather Telemetry Application • Built with HTML5, CSS3 &amp; Vanilla JavaScript
+      </p>
+      <p class="footer-subtext">
+        Powered by <a href="https://openweathermap.org/" target="_blank" rel="noopener noreferrer">OpenWeatherMap API</a>
+        • Units in Metric (°C, m/s, hPa)
+      </p>
+    </footer>
+
+  </div>
+
+  <!-- Load Local Configuration First (Holds WEATHER_API_KEY) -->
+  <script src="config.js"></script>
+  <!-- Main Application Logic -->
+  <script src="script.js"></script>
+</body>
+</html>

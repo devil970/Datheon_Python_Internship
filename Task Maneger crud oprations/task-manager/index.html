@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Task Manager</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header Section -->
+    <header class="app-header">
+      <h1 class="app-title">My Task Manager</h1>
+      <p class="app-subtitle">Organize and manage your daily tasks efficiently</p>
+    </header>
+
+    <!-- Task Statistics Summary -->
+    <section class="task-summary" aria-label="Task Summary">
+      <div class="summary-card">
+        <span class="summary-label">Total Tasks</span>
+        <span class="summary-value" id="total-tasks-count">0</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-label">Active Tasks</span>
+        <span class="summary-value" id="active-tasks-count">0</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-label">Completed</span>
+        <span class="summary-value" id="completed-tasks-count">0</span>
+      </div>
+    </section>
+
+    <!-- Task Input Form -->
+    <section class="task-form-section">
+      <form id="task-form" class="task-form" novalidate>
+        <div class="form-row">
+          <div class="form-group flex-grow">
+            <label for="task-title-input" class="visually-hidden">Task Description</label>
+            <input 
+              type="text" 
+              id="task-title-input" 
+              placeholder="What do you need to do?" 
+              autocomplete="off"
+            >
+          </div>
+        </div>
+
+        <div class="form-row form-row--secondary">
+          <div class="form-group">
+            <label for="task-category-select" class="form-label">Category</label>
+            <select id="task-category-select">
+              <option value="Work">Work</option>
+              <option value="Personal">Personal</option>
+              <option value="Study">Study</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="task-due-date-input" class="form-label">Due Date (Optional)</label>
+            <input type="date" id="task-due-date-input">
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" id="task-submit-btn" class="btn btn-primary">
+              Add Task
+            </button>
+            <button type="button" id="cancel-edit-btn" class="btn btn-secondary hidden">
+              Cancel
+            </button>
+          </div>
+        </div>
+
+        <!-- Validation Error Message -->
+        <p id="form-error-msg" class="form-error hidden" role="alert">
+          Please enter a task description before saving.
+        </p>
+      </form>
+    </section>
+
+    <!-- Controls Section: Search & Status Filters -->
+    <section class="task-controls-section">
+      <!-- Search Input -->
+      <div class="search-box">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input 
+          type="text" 
+          id="search-input" 
+          placeholder="Search tasks by title..." 
+          autocomplete="off"
+        >
+        <button type="button" id="clear-search-btn" class="clear-search-btn hidden" aria-label="Clear search">
+          &times;
+        </button>
+      </div>
+
+      <!-- Filter Buttons -->
+      <div class="filter-group" role="group" aria-label="Filter tasks by status">
+        <button type="button" class="filter-btn active" data-filter="all">All</button>
+        <button type="button" class="filter-btn" data-filter="active">Active</button>
+        <button type="button" class="filter-btn" data-filter="completed">Completed</button>
+      </div>
+    </section>
+
+    <!-- Task List Section -->
+    <section class="task-list-section">
+      <!-- Empty State Indicator -->
+      <div id="empty-state" class="empty-state hidden">
+        <div class="empty-state-icon">📋</div>
+        <p class="empty-state-title">No tasks found</p>
+        <p class="empty-state-desc">Add a new task above or adjust your search and filters.</p>
+      </div>
+
+      <!-- Tasks Unordered List -->
+      <ul id="task-list" class="task-list" aria-label="List of tasks">
+        <!-- Task items dynamically rendered by script.js -->
+      </ul>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

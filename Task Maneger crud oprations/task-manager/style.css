@@ -1,0 +1,620 @@
+/* ==========================================================================
+   Task Manager - Clean, Modern Vanilla CSS Styling
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Root Variables & Reset
+   -------------------------------------------------------------------------- */
+:root {
+  /* Brand / Primary Color */
+  --primary-color: #4f46e5;
+  --primary-hover: #4338ca;
+  --primary-light: #eef2ff;
+
+  /* Neutral Shades */
+  --bg-page: #f8fafc;
+  --bg-card: #ffffff;
+  --border-color: #e2e8f0;
+  --border-focus: #a5b4fc;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+
+  /* Status Colors */
+  --danger-color: #ef4444;
+  --danger-hover: #dc2626;
+  --danger-light: #fee2e2;
+  --danger-text: #b91c1c;
+
+  --work-bg: #e0e7ff;
+  --work-text: #3730a3;
+
+  --personal-bg: #dcfce7;
+  --personal-text: #166534;
+
+  --study-bg: #fef3c7;
+  --study-text: #92400e;
+
+  /* Shadows & Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+
+  /* Transitions */
+  --transition-fast: 0.15s ease-in-out;
+  --transition-normal: 0.25s ease-in-out;
+}
+
+/* Base Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  line-height: 1.5;
+  padding: 2rem 1rem;
+  min-height: 100vh;
+}
+
+/* Accessibility helper */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   2. Main Container
+   -------------------------------------------------------------------------- */
+.app-container {
+  max-width: 680px;
+  margin: 0 auto;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 2rem;
+}
+
+/* --------------------------------------------------------------------------
+   3. Header
+   -------------------------------------------------------------------------- */
+.app-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.app-title {
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  letter-spacing: -0.02em;
+}
+
+.app-subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-top: 0.25rem;
+}
+
+/* --------------------------------------------------------------------------
+   4. Statistics Summary
+   -------------------------------------------------------------------------- */
+.task-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.85rem;
+  margin-bottom: 1.75rem;
+}
+
+.summary-card {
+  background-color: var(--bg-page);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.85rem;
+  text-align: center;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+.summary-card:hover {
+  border-color: var(--border-focus);
+}
+
+.summary-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.summary-value {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+/* --------------------------------------------------------------------------
+   5. Task Form
+   -------------------------------------------------------------------------- */
+.task-form-section {
+  background-color: var(--bg-page);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  margin-bottom: 1.75rem;
+}
+
+.task-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.form-row--secondary {
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.form-group.flex-grow {
+  flex: 1;
+}
+
+.form-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+input[type="text"],
+input[type="date"],
+select {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.95rem;
+  color: var(--text-main);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  font-family: inherit;
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus,
+select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+input.input-error {
+  border-color: var(--danger-color) !important;
+  box-shadow: 0 0 0 3px var(--danger-light) !important;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1.15rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+.btn-secondary {
+  background-color: #ffffff;
+  color: var(--text-muted);
+  border-color: var(--border-color);
+}
+
+.btn-secondary:hover {
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  border-color: var(--text-light);
+}
+
+/* Form Validation Message */
+.form-error {
+  font-size: 0.825rem;
+  color: var(--danger-color);
+  margin-top: -0.25rem;
+  font-weight: 500;
+}
+
+/* --------------------------------------------------------------------------
+   6. Controls: Search and Filters
+   -------------------------------------------------------------------------- */
+.task-controls-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-bottom: 1.25rem;
+}
+
+/* Search input with icon */
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.75rem;
+  color: var(--text-light);
+  pointer-events: none;
+}
+
+.search-box input {
+  padding-left: 2.25rem;
+  padding-right: 2rem;
+}
+
+.clear-search-btn {
+  position: absolute;
+  right: 0.65rem;
+  background: none;
+  border: none;
+  color: var(--text-light);
+  font-size: 1.2rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.clear-search-btn:hover {
+  color: var(--text-main);
+}
+
+/* Filter buttons */
+.filter-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.filter-btn {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  background-color: var(--bg-page);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-family: inherit;
+}
+
+.filter-btn:hover {
+  color: var(--text-main);
+  border-color: var(--text-light);
+}
+
+.filter-btn.active {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border-color: var(--primary-color);
+}
+
+/* --------------------------------------------------------------------------
+   7. Task List & Empty State
+   -------------------------------------------------------------------------- */
+.task-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+}
+
+.empty-state-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.empty-state-desc {
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+/* Task Item */
+.task-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: background-color var(--transition-normal), 
+              border-color var(--transition-normal), 
+              opacity var(--transition-normal),
+              transform var(--transition-fast);
+  cursor: grab;
+}
+
+.task-item:hover {
+  border-color: var(--border-focus);
+}
+
+.task-item:active {
+  cursor: grabbing;
+}
+
+/* Drag & Drop Feedback */
+.task-item.dragging {
+  opacity: 0.45;
+  border: 2px dashed var(--primary-color);
+  background-color: var(--primary-light);
+}
+
+.task-item.drag-over {
+  border-top: 2px solid var(--primary-color);
+  transform: translateY(2px);
+}
+
+/* Left side: checkbox & content */
+.task-left {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex: 1;
+  min-width: 0; /* Prevents text overflow breaking layout */
+}
+
+/* Checkbox */
+.task-checkbox {
+  width: 1.15rem;
+  height: 1.15rem;
+  accent-color: var(--primary-color);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.task-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.task-title {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-main);
+  word-break: break-word;
+  transition: color var(--transition-fast), text-decoration var(--transition-fast);
+}
+
+/* Metadata row (Category, Due Date, Overdue) */
+.task-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.775rem;
+}
+
+/* Category Badges */
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: capitalize;
+}
+
+.badge-work {
+  background-color: var(--work-bg);
+  color: var(--work-text);
+}
+
+.badge-personal {
+  background-color: var(--personal-bg);
+  color: var(--personal-text);
+}
+
+.badge-study {
+  background-color: var(--study-bg);
+  color: var(--study-text);
+}
+
+/* Due Date */
+.task-due-date {
+  color: var(--text-muted);
+}
+
+/* Overdue Indication */
+.badge-overdue {
+  background-color: var(--danger-light);
+  color: var(--danger-text);
+  font-weight: 600;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.725rem;
+}
+
+.task-item--overdue {
+  border-left: 4px solid var(--danger-color);
+}
+
+/* Completed State */
+.task-item--completed {
+  background-color: #fcfcfd;
+  opacity: 0.7;
+}
+
+.task-item--completed .task-title {
+  text-decoration: line-through;
+  color: var(--text-light);
+}
+
+/* Right side: Action Buttons */
+.task-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.btn-icon {
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 0.35rem 0.55rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  color: var(--text-muted);
+  font-family: inherit;
+}
+
+.btn-edit:hover {
+  background-color: var(--primary-light);
+  color: var(--primary-color);
+  border-color: var(--border-focus);
+}
+
+.btn-delete:hover {
+  background-color: var(--danger-light);
+  color: var(--danger-text);
+  border-color: var(--danger-light);
+}
+
+/* --------------------------------------------------------------------------
+   8. Responsive Design
+   -------------------------------------------------------------------------- */
+@media (max-width: 600px) {
+  body {
+    padding: 1rem 0.5rem;
+  }
+
+  .app-container {
+    padding: 1.25rem 1rem;
+    border-radius: var(--radius-md);
+  }
+
+  .app-title {
+    font-size: 1.5rem;
+  }
+
+  .task-summary {
+    gap: 0.5rem;
+  }
+
+  .summary-card {
+    padding: 0.65rem 0.4rem;
+  }
+
+  .summary-value {
+    font-size: 1.25rem;
+  }
+
+  .form-row--secondary {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .form-actions {
+    margin-left: 0;
+    margin-top: 0.5rem;
+    width: 100%;
+  }
+
+  .form-actions .btn {
+    flex: 1;
+  }
+
+  .task-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.65rem;
+  }
+
+  .task-left {
+    width: 100%;
+  }
+
+  .task-actions {
+    width: 100%;
+    justify-content: flex-end;
+    border-top: 1px dashed var(--border-color);
+    padding-top: 0.4rem;
+  }
+}

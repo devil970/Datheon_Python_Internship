@@ -1,0 +1,16 @@
+# robots.txt — Atharva Dhawane Portfolio
+# https://atharvadhawane.dev/robots.txt
+
+# Allow all well-behaved crawlers
+User-agent: *
+Allow: /
+
+# Block direct indexing of raw asset files (certificates, images)
+# These are linked from pages and will be discovered contextually
+Disallow: /assets/certificates/
+
+# Crawl-delay for polite bots (does not affect Googlebot)
+Crawl-delay: 1
+
+# Sitemap location — tells all crawlers where to find the XML sitemap
+Sitemap: https://atharvadhawane.dev/sitemap.xml

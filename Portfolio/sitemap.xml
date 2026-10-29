@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+>
+
+  <!-- Homepage — highest priority, changes monthly -->
+  <url>
+    <loc>https://atharvadhawane.dev/</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://atharvadhawane.dev/assets/my avtar.png</image:loc>
+      <image:title>Atharva Dhawane – Full Stack Web Developer from Maharashtra, India</image:title>
+      <image:caption>Profile photo of Atharva Dhawane, Full Stack Web Developer</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://atharvadhawane.dev/assets/dr aquagalaxy.png</image:loc>
+      <image:title>Draquagalaxy – Water Purifier Business Website</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://atharvadhawane.dev/assets/expense tracker.png</image:loc>
+      <image:title>Expense Tracker – PHP MySQL Personal Finance Web App</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://atharvadhawane.dev/assets/online job portal.png</image:loc>
+      <image:title>Online Job Portal – Python Flask Recruitment Platform</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://atharvadhawane.dev/assets/Bank customer login.png</image:loc>
+      <image:title>Bank Customer Login – Secure Python MySQL Authentication System</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://atharvadhawane.dev/assets/Digital Library.png</image:loc>
+      <image:title>Digital Library – Python JavaScript Book Management System</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://atharvadhawane.dev/assets/Library log system.png</image:loc>
+      <image:title>Library Log System – Python Flask Checkout Tracking App</image:title>
+    </image:image>
+  </url>
+
+  <!-- All Projects page — second most important, changes when new projects added -->
+  <url>
+    <loc>https://atharvadhawane.dev/projects.html</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://atharvadhawane.dev/assets/dr aquagalaxy.png</image:loc>
+      <image:title>Draquagalaxy – Responsive Water Purifier Website</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://atharvadhawane.dev/assets/expense tracker.png</image:loc>
+      <image:title>Expense Tracker – Full Stack Budget Management App</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://atharvadhawane.dev/assets/online job portal.png</image:loc>
+      <image:title>Online Job Portal – Flask MySQL Recruitment System</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://atharvadhawane.dev/assets/Bank customer login.png</image:loc>
+      <image:title>Bank Customer Login – Secure Authentication Portal</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://atharvadhawane.dev/assets/Digital Library.png</image:loc>
+      <image:title>Digital Library – Online Book Cataloguing System</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://atharvadhawane.dev/assets/Library log system.png</image:loc>
+      <image:title>Library Log System – Book Tracking Application</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://atharvadhawane.dev/assets/Irise flower clasification.png</image:loc>
+      <image:title>Iris Flower Classification – Python ML Scikit-learn Model</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://atharvadhawane.dev/assets/Al Based Cyber Security Threat Detection.png</image:loc>
+      <image:title>AI Based Cyber Security Threat Detection – ML Security System</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://atharvadhawane.dev/assets/Boutique management system.png</image:loc>
+      <image:title>Boutique Management System – Flask MySQL Inventory Solution</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://atharvadhawane.dev/assets/Grocery Retail Operations Management Suite.png</image:loc>
+      <image:title>Grocery Retail Operations Management Suite – PHP MySQL System</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://atharvadhawane.dev/assets/landing page.png</image:loc>
+      <image:title>Landing Page – Responsive HTML CSS JavaScript UI</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://atharvadhawane.dev/assets/MCQ  Website .png</image:loc>
+      <image:title>MCQ Website – Interactive JavaScript Quiz Platform</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://atharvadhawane.dev/assets/Personal Finance Tracker .png</image:loc>
+      <image:title>Personal Finance Tracker – PHP MySQL Financial Management App</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://atharvadhawane.dev/assets/Portfolio website.png</image:loc>
+      <image:title>Portfolio Website – Dark Theme Developer Portfolio</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://atharvadhawane.dev/assets/Private Tutoring Enrollment &amp; Scheduling management system.png</image:loc>
+      <image:title>Private Tutoring Enrollment and Scheduling System – Flask MySQL</image:title>
+    </image:image>
+  </url>
+
+</urlset>

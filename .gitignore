@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Environment and sensitive keys
+.env
+.env.local
+.env.*.local
+real time whether/config.js
+
+# Logs
+*.log
+
+# Operating System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Python cache & virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/

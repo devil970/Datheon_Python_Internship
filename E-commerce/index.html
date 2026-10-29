@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ShopEase - A modern, responsive e-commerce storefront built with vanilla JavaScript and FakeStoreAPI. Browse electronics, jewelry, and fashion essentials with a real-time cart.">
+  <title>ShopEase — Modern E-Commerce Storefront</title>
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Theme Initialization (prevents flash of wrong theme) -->
+  <script>
+    (function() {
+      try {
+        const savedTheme = localStorage.getItem('shopease_theme');
+        if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <!-- Header / Navigation Bar -->
+  <header class="navbar" id="main-header">
+    <div class="nav-container">
+      <!-- Brand Logo -->
+      <a href="#" class="brand-logo" id="brand-logo" aria-label="ShopEase Home">
+        <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+        <span class="brand-name">Shop<span class="brand-accent">Ease</span></span>
+      </a>
+
+      <!-- Search Bar -->
+      <div class="search-wrapper" role="search">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input 
+          type="search" 
+          id="search-input" 
+          class="search-input" 
+          placeholder="Search products by title..." 
+          aria-label="Search products by title"
+          autocomplete="off"
+        >
+        <button type="button" id="search-clear-btn" class="search-clear-btn hidden" aria-label="Clear search input">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Header Actions: Theme Toggle, Wishlist, Cart -->
+      <div class="nav-actions">
+        <!-- Theme Mode Toggle -->
+        <button type="button" id="theme-toggle-btn" class="nav-icon-btn" aria-label="Toggle dark mode" title="Switch Theme">
+          <svg class="sun-icon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <!-- Wishlist Button -->
+        <button type="button" id="wishlist-toggle-btn" class="wishlist-btn" aria-label="Open wishlist" aria-haspopup="dialog">
+          <svg class="wishlist-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+          <span class="wishlist-label">Saved</span>
+          <span id="wishlist-badge" class="wishlist-badge" aria-label="0 saved items">0</span>
+        </button>
+
+        <!-- Cart Button -->
+        <button type="button" id="cart-toggle-btn" class="cart-btn" aria-label="Open shopping cart" aria-haspopup="dialog">
+          <svg class="cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          <span class="cart-label">Cart</span>
+          <span id="cart-badge" class="cart-badge" aria-label="0 items in cart">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section" id="hero-section">
+    <div class="hero-container">
+      <div class="hero-content">
+        <span class="hero-badge">Summer Essentials &bull; 2026 Collection</span>
+        <h1 class="hero-title">Curated Quality Products at Honest Prices</h1>
+        <p class="hero-subtitle">
+          Explore top-rated electronics, handcrafted jewelry, and everyday apparel powered by live API integration. Enjoy free domestic shipping on orders over $50!
+        </p>
+        <div class="hero-perks">
+          <div class="perk-item">
+            <svg class="perk-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="1" y="3" width="15" height="13"></rect>
+              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+              <circle cx="5.5" cy="18.5" r="2.5"></circle>
+              <circle cx="18.5" cy="18.5" r="2.5"></circle>
+            </svg>
+            <span>Free Shipping over $50</span>
+          </div>
+          <div class="perk-item">
+            <svg class="perk-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            <span>Safe &amp; Verified Items</span>
+          </div>
+          <div class="perk-item">
+            <svg class="perk-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+              <polyline points="17 6 23 6 23 12"></polyline>
+            </svg>
+            <span>Live Inventory via API</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Storefront Section -->
+  <main class="main-content" id="main-content">
+    <div class="content-container">
+      
+      <!-- Filter and Controls Toolbar -->
+      <section class="controls-section" aria-label="Product filters and sorting">
+        <!-- Category Filter Buttons -->
+        <div class="categories-wrapper" role="group" aria-label="Filter products by category">
+          <button type="button" class="category-btn active" data-category="all" id="cat-all">All Products</button>
+          <button type="button" class="category-btn" data-category="electronics" id="cat-electronics">Electronics</button>
+          <button type="button" class="category-btn" data-category="jewelery" id="cat-jewelery">Jewelry</button>
+          <button type="button" class="category-btn" data-category="men's clothing" id="cat-mens">Men's Clothing</button>
+          <button type="button" class="category-btn" data-category="women's clothing" id="cat-womens">Women's Clothing</button>
+        </div>
+
+        <!-- Secondary Toolbar: Active Filter Info & Sort -->
+        <div class="toolbar-secondary">
+          <div class="results-info" id="results-info" aria-live="polite">
+            Loading products...
+          </div>
+          <div class="sort-wrapper">
+            <label for="sort-select" class="sort-label">Sort by:</label>
+            <select id="sort-select" class="sort-select" aria-label="Sort products">
+              <option value="featured">Featured</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="rating-desc">Highest Rated</option>
+              <option value="title-asc">Alphabetical (A-Z)</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- Loading State Indicator -->
+      <div id="loading-state" class="state-container" aria-live="polite">
+        <div class="spinner" aria-hidden="true"></div>
+        <h2 class="state-title">Fetching Live Catalog</h2>
+        <p class="state-desc">Connecting to FakeStoreAPI to retrieve our latest products...</p>
+      </div>
+
+      <!-- Error State with Retry Button -->
+      <div id="error-state" class="state-container hidden" role="alert" aria-live="assertive">
+        <div class="state-icon error-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+        </div>
+        <h2 class="state-title">Unable to Load Products</h2>
+        <p id="error-message" class="state-desc">We encountered an issue fetching data from the API. Please check your network connection and try again.</p>
+        <button type="button" id="retry-btn" class="btn btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="btn-icon">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+          </svg>
+          Retry Connection
+        </button>
+      </div>
+
+      <!-- Empty Filter/Search State -->
+      <div id="empty-state" class="state-container hidden" aria-live="polite">
+        <div class="state-icon empty-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            <line x1="8" y1="11" x2="14" y2="11"></line>
+          </svg>
+        </div>
+        <h2 class="state-title">No Matching Products Found</h2>
+        <p class="state-desc">No items match your active search and category filters. Try adjusting your query or resetting filters.</p>
+        <button type="button" id="reset-filters-btn" class="btn btn-secondary">
+          Reset All Filters
+        </button>
+      </div>
+
+      <!-- Main Product Listing Grid -->
+      <section class="products-section" aria-label="Product catalog">
+        <div id="products-grid" class="products-grid" aria-live="polite">
+          <!-- Dynamically populated via JavaScript -->
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Slide-out Shopping Cart Drawer & Overlay -->
+  <div id="cart-overlay" class="drawer-overlay" aria-hidden="true"></div>
+
+  <aside 
+    id="cart-drawer" 
+    class="cart-drawer" 
+    role="dialog" 
+    aria-modal="true" 
+    aria-labelledby="cart-heading"
+    aria-hidden="true"
+  >
+    <!-- Drawer Header -->
+    <div class="drawer-header">
+      <div class="drawer-title-group">
+        <h2 id="cart-heading" class="drawer-title">Shopping Cart</h2>
+        <span id="drawer-item-count" class="badge badge-pill">0 items</span>
+      </div>
+      <button type="button" id="close-cart-btn" class="drawer-close-btn" aria-label="Close shopping cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Free Shipping Progress Indicator -->
+    <div class="shipping-progress-box" id="shipping-progress-box">
+      <div class="shipping-progress-text" id="shipping-progress-text">
+        Add <strong>$50.00</strong> more to qualify for <strong>FREE Shipping</strong>!
+      </div>
+      <div class="progress-bar-bg" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="50" id="shipping-progress-bar-container">
+        <div class="progress-bar-fill" id="shipping-progress-bar"></div>
+      </div>
+    </div>
+
+    <!-- Cart Items Scrollable Container -->
+    <div class="drawer-body">
+      <!-- Empty Cart Message -->
+      <div id="cart-empty-state" class="cart-empty-state">
+        <svg class="cart-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        <p class="empty-cart-title">Your cart is currently empty</p>
+        <p class="empty-cart-desc">Looks like you haven't added anything to your cart yet. Explore our catalog to find great deals.</p>
+        <button type="button" id="start-shopping-btn" class="btn btn-outline">
+          Start Shopping
+        </button>
+      </div>
+
+      <!-- List of Cart Items -->
+      <div id="cart-items-list" class="cart-items-list" role="list">
+        <!-- Rendered via JavaScript renderCart() -->
+      </div>
+    </div>
+
+    <!-- Drawer Footer: Pricing Breakdown and Checkout CTA -->
+    <div class="drawer-footer" id="drawer-footer">
+      <div class="pricing-summary">
+        <div class="summary-row">
+          <span class="summary-label">Subtotal</span>
+          <span id="cart-subtotal" class="summary-val">$0.00</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Estimated Tax (8%)</span>
+          <span id="cart-tax" class="summary-val">$0.00</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">
+            Shipping
+            <span class="info-tag" title="Orders $50+ get free shipping, otherwise $5 flat rate">ℹ️</span>
+          </span>
+          <span id="cart-shipping" class="summary-val">$0.00</span>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-row total-row">
+          <span class="summary-label-total">Final Total</span>
+          <span id="cart-total" class="summary-val-total">$0.00</span>
+        </div>
+      </div>
+
+      <button type="button" id="checkout-btn" class="btn btn-primary btn-block btn-lg" disabled>
+        Proceed to Checkout
+      </button>
+      
+      <p class="demo-pricing-note">
+        * Simulated pricing rules: 8% tax &amp; $5 standard shipping (free on orders $50+).
+      </p>
+    </div>
+  </aside>
+
+  <!-- Slide-out Wishlist Drawer & Overlay -->
+  <div id="wishlist-overlay" class="drawer-overlay" aria-hidden="true"></div>
+
+  <aside 
+    id="wishlist-drawer" 
+    class="cart-drawer wishlist-drawer" 
+    role="dialog" 
+    aria-modal="true" 
+    aria-labelledby="wishlist-heading"
+    aria-hidden="true"
+  >
+    <div class="drawer-header">
+      <div class="drawer-title-group">
+        <h2 id="wishlist-heading" class="drawer-title">Saved Items</h2>
+        <span id="wishlist-drawer-count" class="badge badge-pill">0 items</span>
+      </div>
+      <button type="button" id="close-wishlist-btn" class="drawer-close-btn" aria-label="Close wishlist drawer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="drawer-body">
+      <!-- Empty Wishlist State -->
+      <div id="wishlist-empty-state" class="cart-empty-state">
+        <svg class="cart-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
+        <p class="empty-cart-title">Your wishlist is empty</p>
+        <p class="empty-cart-desc">Click the heart icon on any product to save items you love for later.</p>
+        <button type="button" id="wishlist-explore-btn" class="btn btn-outline">
+          Explore Products
+        </button>
+      </div>
+
+      <!-- Wishlist Items List -->
+      <div id="wishlist-items-list" class="cart-items-list" role="list">
+        <!-- Dynamically rendered via JavaScript renderWishlist() -->
+      </div>
+    </div>
+
+    <div class="drawer-footer" id="wishlist-footer">
+      <button type="button" id="move-all-wishlist-btn" class="btn btn-primary btn-block btn-lg" disabled>
+        Move All to Cart
+      </button>
+    </div>
+  </aside>
+
+  <!-- Simulated Checkout Modal -->
+  <div id="checkout-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="checkout-modal-title" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="checkout-modal-title" class="modal-title">Complete Your Order</h2>
+        <button type="button" id="close-checkout-btn" class="modal-close-btn" aria-label="Close checkout modal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Order Summary Box -->
+        <div class="checkout-summary-box">
+          <div class="checkout-summary-header">
+            <span class="checkout-summary-title">Order Overview</span>
+            <span id="checkout-items-count" class="badge">0 items</span>
+          </div>
+          <div id="checkout-items-preview" class="checkout-items-preview">
+            <!-- Rendered in script.js -->
+          </div>
+          <div class="checkout-total-row">
+            <span>Amount Due (USD):</span>
+            <strong id="checkout-final-total" class="checkout-final-total">$0.00</strong>
+          </div>
+        </div>
+
+        <!-- Demonstration Notice Banner -->
+        <div class="demo-notice-alert">
+          <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          <div>
+            <strong>Demonstration Checkout:</strong> This is a simulation for a junior frontend internship project. No actual payments or credit cards are accepted.
+          </div>
+        </div>
+
+        <!-- Customer Form -->
+        <form id="checkout-form" class="checkout-form" novalidate>
+          <div class="form-group">
+            <label for="customer-name" class="form-label">Full Name <span class="required-star">*</span></label>
+            <input 
+              type="text" 
+              id="customer-name" 
+              class="form-control" 
+              placeholder="e.g. Alex Johnson" 
+              required
+              autocomplete="name"
+            >
+            <span class="form-error-msg" id="name-error">Please enter your full name (minimum 2 characters).</span>
+          </div>
+
+          <div class="form-group">
+            <label for="customer-email" class="form-label">Email Address <span class="required-star">*</span></label>
+            <input 
+              type="email" 
+              id="customer-email" 
+              class="form-control" 
+              placeholder="e.g. alex.johnson@example.com" 
+              required
+              autocomplete="email"
+            >
+            <span class="form-error-msg" id="email-error">Please provide a valid email address.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="customer-address" class="form-label">Delivery Street Address</label>
+            <input 
+              type="text" 
+              id="customer-address" 
+              class="form-control" 
+              placeholder="e.g. 123 Market Street, Apt 4B"
+              autocomplete="street-address"
+            >
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="customer-city" class="form-label">City</label>
+              <input type="text" id="customer-city" class="form-control" placeholder="e.g. San Francisco">
+            </div>
+            <div class="form-group">
+              <label for="customer-zip" class="form-label">Postal / ZIP Code</label>
+              <input type="text" id="customer-zip" class="form-control" placeholder="e.g. 94105">
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" id="cancel-checkout-btn" class="btn btn-secondary">
+              Cancel
+            </button>
+            <button type="submit" id="confirm-order-btn" class="btn btn-primary btn-lg">
+              Confirm Order
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Order Confirmation Modal -->
+  <div id="confirmation-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="confirm-modal-title" aria-hidden="true">
+    <div class="modal-card confirmation-card">
+      <div class="success-icon-wrapper" aria-hidden="true">
+        <svg class="success-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+      </div>
+
+      <h2 id="confirm-modal-title" class="confirmation-title">Order Confirmed!</h2>
+      <p class="confirmation-subtitle">
+        Thank you for your simulated purchase, <span id="confirm-customer-name" class="font-bold">Customer</span>!
+      </p>
+
+      <div class="order-receipt-box">
+        <div class="receipt-row">
+          <span class="receipt-label">Order Reference:</span>
+          <span id="confirm-order-ref" class="receipt-val ref-code">SE-000000</span>
+        </div>
+        <div class="receipt-row">
+          <span class="receipt-label">Confirmation Sent To:</span>
+          <span id="confirm-customer-email" class="receipt-val">email@example.com</span>
+        </div>
+        <div class="receipt-row">
+          <span class="receipt-label">Total Charged:</span>
+          <span id="confirm-order-total" class="receipt-val font-bold">$0.00</span>
+        </div>
+        <div class="receipt-row">
+          <span class="receipt-label">Estimated Delivery:</span>
+          <span class="receipt-val">3–5 Business Days (Demo)</span>
+        </div>
+      </div>
+
+      <p class="confirmation-note">
+        Your shopping cart and localStorage have been cleared. This concludes the demonstration checkout workflow.
+      </p>
+
+      <button type="button" id="continue-shopping-btn" class="btn btn-primary btn-block btn-lg">
+        Continue Shopping
+      </button>
+    </div>
+  </div>
+
+  <!-- Product Quick View Modal -->
+  <div id="quickview-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="quickview-title" aria-hidden="true">
+    <div class="modal-card quickview-card">
+      <div class="modal-header">
+        <span class="badge" id="quickview-category-badge">Category</span>
+        <button type="button" id="close-quickview-btn" class="modal-close-btn" aria-label="Close product quick view">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body quickview-body">
+        <div class="quickview-grid">
+          <div class="quickview-image-col">
+            <div class="quickview-img-box">
+              <img id="quickview-image" src="" alt="Product Preview" class="quickview-img">
+            </div>
+          </div>
+          <div class="quickview-details-col">
+            <div class="quickview-rating" id="quickview-rating">
+              <span class="star-icon">&#9733;</span>
+              <span id="quickview-rate-val">4.5</span>
+              <span class="rating-count" id="quickview-count-val">(120 reviews)</span>
+            </div>
+            <h2 id="quickview-title" class="quickview-title">Product Title</h2>
+            <div class="quickview-price-row">
+              <span id="quickview-price" class="quickview-price">$0.00</span>
+              <span class="stock-badge">In Stock &bull; Fast Delivery</span>
+            </div>
+            <p id="quickview-description" class="quickview-desc">Product description goes here.</p>
+            
+            <div class="quickview-actions">
+              <div class="quickview-qty-group">
+                <label class="form-label" for="quickview-qty-val">Quantity:</label>
+                <div class="qty-control">
+                  <button type="button" id="quickview-minus-btn" class="qty-btn" aria-label="Decrease quantity">&minus;</button>
+                  <span id="quickview-qty-val" class="qty-val" aria-label="Quantity: 1">1</span>
+                  <button type="button" id="quickview-plus-btn" class="qty-btn" aria-label="Increase quantity">+</button>
+                </div>
+              </div>
+
+              <div class="quickview-buttons">
+                <button type="button" id="quickview-add-cart-btn" class="btn btn-primary btn-lg quickview-add-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+                    <circle cx="9" cy="21" r="1"></circle>
+                    <circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                  </svg>
+                  <span>Add to Cart</span>
+                </button>
+                <button type="button" id="quickview-wishlist-btn" class="btn btn-secondary quickview-wishlist-btn" aria-label="Save to Wishlist" title="Save to Wishlist">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                  </svg>
+                  <span class="btn-wishlist-text">Wishlist</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Footer -->
+  <footer class="site-footer" id="main-footer">
+    <div class="footer-container">
+      <div class="footer-grid">
+        <div class="footer-col brand-col">
+          <div class="footer-brand">
+            <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+            <span class="brand-name">Shop<span class="brand-accent">Ease</span></span>
+          </div>
+          <p class="footer-text">
+            A functional modern storefront demonstrating frontend development skills: REST API integration, reactive shopping cart logic, localStorage persistence, and responsive design.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h3 class="footer-heading">Store Categories</h3>
+          <ul class="footer-links">
+            <li><a href="#cat-all" class="footer-link">All Products</a></li>
+            <li><a href="#cat-electronics" class="footer-link">Electronics</a></li>
+            <li><a href="#cat-jewelery" class="footer-link">Jewelry</a></li>
+            <li><a href="#cat-mens" class="footer-link">Men's Clothing</a></li>
+            <li><a href="#cat-womens" class="footer-link">Women's Clothing</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3 class="footer-heading">Store Policies</h3>
+          <ul class="footer-links">
+            <li><span class="footer-policy-item">Free Shipping: Orders over $50</span></li>
+            <li><span class="footer-policy-item">Standard Flat Rate: $5.00</span></li>
+            <li><span class="footer-policy-item">Estimated Sales Tax: 8%</span></li>
+            <li><span class="footer-policy-item">30-Day Simulated Returns</span></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3 class="footer-heading">Tech Stack</h3>
+          <div class="tech-pills">
+            <span class="tech-pill">HTML5</span>
+            <span class="tech-pill">CSS3 Grid / Flex</span>
+            <span class="tech-pill">Vanilla JS (ES6+)</span>
+            <span class="tech-pill">FakeStoreAPI</span>
+            <span class="tech-pill">localStorage</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 ShopEase Storefront. Built for Junior Frontend Web Development Internship.</p>
+        <p class="footer-disclaimer">Product catalog data served dynamically by <a href="https://fakestoreapi.com" target="_blank" rel="noopener noreferrer">FakeStoreAPI</a>. No commercial transactions.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Main JavaScript File -->
+  <script src="script.js"></script>
+</body>
+</html>
